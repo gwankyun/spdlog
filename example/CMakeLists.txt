@@ -14,6 +14,10 @@ endif()
 add_executable(example example.cpp)
 target_link_libraries(example PRIVATE spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>)
 
+add_executable(example_module example_module.cpp)
+target_link_libraries(example_module PRIVATE spdlog::module $<$<BOOL:${MINGW}>:ws2_32>)
+target_compile_features(example_module PRIVATE cxx_std_23)
+
 # ---------------------------------------------------------------------------------------
 # Example of using header-only library
 # ---------------------------------------------------------------------------------------

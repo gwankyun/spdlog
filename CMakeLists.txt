@@ -1,6 +1,6 @@
 # Copyright(c) 2019 spdlog authors Distributed under the MIT License (http://opensource.org/licenses/MIT)
 
-cmake_minimum_required(VERSION 3.10...3.21)
+cmake_minimum_required(VERSION 3.10...4.2)
 
 # ---------------------------------------------------------------------------------------
 # Start spdlog project
@@ -316,6 +316,37 @@ if(SPDLOG_NO_EXCEPTIONS)
         target_compile_definitions(spdlog PRIVATE _HAS_EXCEPTIONS=0)
     endif()
 endif()
+
+# ---------------------------------------------------------------------------------------
+# C++20 module
+# ---------------------------------------------------------------------------------------
+add_library(spdlog_module STATIC)
+add_library(spdlog::module ALIAS spdlog_module)
+target_sources(spdlog_module
+  PUBLIC
+    FILE_SET cxx_modules TYPE CXX_MODULES
+    BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src
+    FILES
+      src/spdlog.ixx
+      src/spdlog.sinks.stdout_color_sinks.ixx
+      src/spdlog.sinks.stdout_sinks.ixx
+      src/spdlog.sinks.basic_file_sink.ixx
+      src/spdlog.sinks.rotating_file_sink.ixx
+      src/spdlog.sinks.daily_file_sink.ixx
+      src/spdlog.sinks.callback_sink.ixx
+      src/spdlog.async.ixx
+      src/spdlog.cfg.env.ixx
+  PRIVATE
+    include/spdlog/macro.h
+)
+target_compile_definitions(spdlog_module
+  PUBLIC
+    SPDLOG_MODULE
+)
+target_link_libraries(spdlog_module PRIVATE spdlog)
+target_compile_options(spdlog_module PUBLIC $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:MSVC>>:/utf-8>)
+target_compile_features(spdlog_module PRIVATE cxx_std_23)
+
 # ---------------------------------------------------------------------------------------
 # Build binaries
 # ---------------------------------------------------------------------------------------
