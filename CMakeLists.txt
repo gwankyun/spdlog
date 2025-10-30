@@ -336,6 +336,8 @@ target_sources(spdlog_module
       src/spdlog.sinks.callback_sink.ixx
       src/spdlog.async.ixx
       src/spdlog.cfg.env.ixx
+      src/spdlog.fmt.bin_to_hex.ixx
+      src/spdlog.fmt.ranges.ixx
   PRIVATE
     include/spdlog/macro.h
 )
